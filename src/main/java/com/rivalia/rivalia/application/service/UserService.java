@@ -4,7 +4,11 @@ import com.rivalia.rivalia.application.port.in.UserUseCase;
 import com.rivalia.rivalia.application.port.out.UserRepositoryPort;
 import com.rivalia.rivalia.application.port.out.WebClientRepositoryPort;
 import com.rivalia.rivalia.domain.model.User;
+import com.rivalia.rivalia.infraestructure.outbund.webclient.dto.AuthApiGeneralResponse;
+import com.rivalia.rivalia.infraestructure.outbund.webclient.dto.AuthApiUserSave;
 import com.rivalia.rivalia.shared.mapper.GlobalMapper;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
