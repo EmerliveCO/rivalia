@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,7 +14,7 @@ public class UserRequest {
     private String idAuth;
     private String name;
     private String lastName;
-    private LocalDateTime timeStamp;
+    private LocalDate timeStamp;
     private LocalDate createdAt;
     private String status;
     private String city;

@@ -21,13 +21,13 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public Mono<User> save(User user) {
-        return webClientRepositoryPort.saveInAuthApi(user)
+    public Mono<User> save(User user, String appId, String password) {
+        return webClientRepositoryPort.saveInAuthApi(user, appId, password)
                 .map(authResponse -> {
                     user.setIdAuth(authResponse.getData().getUserId());
                     return user;
                 })
-                .map(userRepositoryPort::save)
+                .flatMap(userRepositoryPort::save)
                 .map(userSaved -> globalMapper.map(userSaved, User.class));
     }
 }
