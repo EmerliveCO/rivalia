@@ -5,13 +5,12 @@ import com.rivalia.rivalia.domain.model.User;
 import com.rivalia.rivalia.infraestructure.outbund.database.entity.UserEntity;
 import com.rivalia.rivalia.infraestructure.outbund.database.repository.SpringDataUserRepository;
 import com.rivalia.rivalia.infraestructure.outbund.webclient.AuthApiWebClient;
+import com.rivalia.rivalia.shared.exception.DatabaseException;
 import com.rivalia.rivalia.shared.mapper.GlobalMapper;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
+import java.time.LocalDate;
 
 @Repository
 public class UserRepositoryAdapter implements UserRepositoryPort {
@@ -27,8 +26,14 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public Mono<UserEntity> save(User user) {
-        return userRepository.save(globalMapper.map(user, UserEntity.class))
+        UserEntity userEntity = globalMapper.map(user, UserEntity.class);
+        userEntity.setTimeStamp(LocalDate.now());
+        userEntity.setCreatedAt(LocalDate.now());
+        userEntity.setStatus("Active");
+        userEntity.setIsDeleted(false);
+
+        return userRepository.save(userEntity)
                 .onErrorResume(error -> authApiWebClient.deleteAuthApiUser(user.getIdAuth())
-                        .then(Mono.error(new RuntimeException("Something went wrong creating user"))));
+                            .then(Mono.error(new DatabaseException(error.getCause().getLocalizedMessage()))));
     }
 }

@@ -1,13 +1,8 @@
 package com.rivalia.rivalia.domain.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -19,7 +14,7 @@ public class User {
     private String idAuth;
     private String name;
     private String lastName;
-    private LocalDateTime timeStamp;
+    private LocalDate timeStamp;
     private LocalDate createdAt;
     private String status;
     private String city;
