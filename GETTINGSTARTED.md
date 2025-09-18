@@ -14,7 +14,7 @@ as tournaments played, the number of tournaments won, and other statistics relat
 ### Postgres Installation
 
 Once you install [Podman](https://podman.io/) and [PgAdmin](https://www.pgadmin.org/download/) you can create a 
-PostgreSQL container. (you can also use [Docker](https://www.docker.com/) instead of [Podman](https://podman.io/)))
+PostgreSQL container. (you can also use [Docker](https://www.docker.com/) instead of [Podman](https://podman.io/)
 
 Primero debemos hacer pull a la imagen de Postgres
 First, we need to pull the postgres image
@@ -66,13 +66,28 @@ CREATE TABLE users (
     address VARCHAR(100),
     email VARCHAR(100) NOT NULL,
     gender VARCHAR(20) NOT NULL,
-    isDeleted BOOLEAN DEFAULT FALSE,
-
-	CONSTRAINT uq_document_number UNIQUE (document_number),
-	CONSTRAINT uq_email UNIQUE (email),
-	CONSTRAINT uq_document_email UNIQUE (document_number, email)
+    isDeleted BOOLEAN DEFAULT FALSE
 );
 ```
+Create users UNIQUES INDEX
+```bash
+CREATE UNIQUE INDEX ux_users_email_not_deleted 
+ON users(email) 
+WHERE isDeleted = false;
+
+CREATE UNIQUE INDEX ux_users_document_type_not_deleted 
+ON users(document_type) 
+WHERE isDeleted = false;
+
+CREATE UNIQUE INDEX ux_users_document_not_deleted 
+ON users(document_number) 
+WHERE isDeleted = false;
+
+CREATE UNIQUE INDEX ux_users_document_document_type_email_not_deleted 
+ON users(document_number, document_type, email) 
+WHERE isDeleted = false;
+```
+
 Create Sports Table
 ```bash
 CREATE TABLE sport (

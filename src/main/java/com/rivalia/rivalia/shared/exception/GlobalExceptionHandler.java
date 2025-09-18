@@ -47,42 +47,39 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<AuthApiGeneralResponse<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        log.error("Method Argument Not Valid Exception: {}", exception.getMessage());
-        AuthApiGeneralResponse<?> errorResponse = new AuthApiGeneralResponse<>("Failure",
-                "Validation Error: " + exception.getMessage(),
-                null);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return genericResponseBuilder("Validation Error: " + exception.getMessage(),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<AuthApiGeneralResponse<?>> handleGenericException(Exception exception) {
         log.error("Unexpected Error: {}", exception.getMessage(), exception);
-        AuthApiGeneralResponse<?> errorResponse = new AuthApiGeneralResponse<>("Failure",
-                "Internal Server Error", null);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        return genericResponseBuilder("Unexpected Error",
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<AuthApiGeneralResponse<?>> handleBusinessException(BusinessException exception) {
-        log.error("Business Exception: {}", exception.getMessage());
-        AuthApiGeneralResponse<?> errorResponse = new AuthApiGeneralResponse<>("Failure",
-                exception.getMessage(), null);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return genericResponseBuilder("Business Exception: " + exception.getMessage(),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<AuthApiGeneralResponse<?>> handleResourceNotFoundException(ResourceNotFoundException exception) {
-        log.error("Resource Not Found: {}", exception.getMessage());
-        AuthApiGeneralResponse<?> errorResponse = new AuthApiGeneralResponse<>("Failure",
-                exception.getMessage(), null);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        return genericResponseBuilder("Resource Not Found: " + exception.getMessage(),
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<AuthApiGeneralResponse<?>> handlerDuplicateKey(DatabaseException exception) {
-        log.error("Database Error: {}", exception.getLocalizedMessage());
+        return genericResponseBuilder("Database Error: " + exception.getLocalizedMessage(),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<AuthApiGeneralResponse<?>> genericResponseBuilder(String reason, HttpStatus httpStatus) {
+        log.error(reason);
         AuthApiGeneralResponse<?> errorResponse = new AuthApiGeneralResponse<>("Failure",
-                "Database error: " + exception.getLocalizedMessage(), null);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+                reason, null);
+        return ResponseEntity.status(httpStatus).body(errorResponse);
     }
 }
