@@ -1,0 +1,13 @@
+package com.rivalia.rivalia.infraestructure.outbund.webclient.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class VerifyAuthUserResponse {
+    private String idAuth;
+}

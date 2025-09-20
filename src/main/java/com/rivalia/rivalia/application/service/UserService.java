@@ -30,4 +30,15 @@ public class UserService implements UserUseCase {
                 .flatMap(userRepositoryPort::save)
                 .map(userSaved -> globalMapper.map(userSaved, User.class));
     }
+
+    @Override
+    public Mono<User> edit(User user, String token) {
+        return webClientRepositoryPort.validateUserAuth(token)
+                .map(idAuth -> {
+                    user.setIdAuth(idAuth.getData().getIdAuth());
+                    return user;
+                })
+                .flatMap(userRepositoryPort::edit)
+                .map(userEdited -> globalMapper.map(userEdited, User.class));
+    }
 }
