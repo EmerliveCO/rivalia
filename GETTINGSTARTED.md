@@ -75,6 +75,10 @@ CREATE UNIQUE INDEX ux_users_email_not_deleted
 ON users(email) 
 WHERE isDeleted = false;
 
+CREATE UNIQUE INDEX ux_users_idAuth_not_deleted 
+ON users(id_auth) 
+WHERE isDeleted = false;
+
 CREATE UNIQUE INDEX ux_users_document_type_not_deleted 
 ON users(document_type) 
 WHERE isDeleted = false;

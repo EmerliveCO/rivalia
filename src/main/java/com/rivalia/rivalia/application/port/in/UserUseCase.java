@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface UserUseCase {
     Mono<User> save(User user, String appId, String password);
+    Mono<User> edit(User user, String token);
 }

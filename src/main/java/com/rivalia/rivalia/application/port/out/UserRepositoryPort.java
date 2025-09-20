@@ -6,4 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface UserRepositoryPort {
     Mono<UserEntity> save(User user);
+    Mono<UserEntity> edit(User user);
 }

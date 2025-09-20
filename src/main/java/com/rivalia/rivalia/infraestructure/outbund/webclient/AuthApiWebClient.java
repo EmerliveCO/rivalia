@@ -6,6 +6,7 @@ import com.rivalia.rivalia.infraestructure.inbound.dto.LoginAppRequest;
 import com.rivalia.rivalia.infraestructure.outbund.webclient.dto.AuthApiGeneralResponse;
 import com.rivalia.rivalia.infraestructure.outbund.webclient.dto.AuthApiUserSave;
 import com.rivalia.rivalia.infraestructure.outbund.webclient.dto.CreateUserRequestBody;
+import com.rivalia.rivalia.infraestructure.outbund.webclient.dto.VerifyAuthUserResponse;
 import com.rivalia.rivalia.shared.exception.ApiException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -40,7 +41,7 @@ public class AuthApiWebClient implements WebClientRepositoryPort {
                         .appId(appId)
                         .password(password)
                         .lastName(user.getLastName())
-                        .build(), new ParameterizedTypeReference<AuthApiGeneralResponse<AuthApiUserSave>>(){});
+                        .build(), new ParameterizedTypeReference<>(){});
     }
 
     @Override
@@ -58,6 +59,14 @@ public class AuthApiWebClient implements WebClientRepositoryPort {
                 new ParameterizedTypeReference<>(){});
     }
 
+    @Override
+    public Mono<AuthApiGeneralResponse<VerifyAuthUserResponse>> validateUserAuth(String token) {
+        return dynamicWebClient(HttpMethod.GET, "/api/v1/auth/user/verifyAuth", null, null,
+                Map.of("Authorization", token, "app-id-verify", APP_ID_VERIFY), null,
+                new ParameterizedTypeReference<>(){});
+    }
+
+
 
     public Mono<AuthApiGeneralResponse<String>> loginAppAdmin() {
         LoginAppRequest loginAppRequest = LoginAppRequest.builder()
@@ -65,7 +74,7 @@ public class AuthApiWebClient implements WebClientRepositoryPort {
                 .password(APP_PASSWORD)
                 .build();
         return dynamicWebClient(HttpMethod.POST, "/api/v1/auth/app/login", null, null, null,
-                loginAppRequest,new ParameterizedTypeReference<AuthApiGeneralResponse<String>>(){});
+                loginAppRequest,new ParameterizedTypeReference<>(){});
     }
 
     public <T, R> Mono<AuthApiGeneralResponse<R>> dynamicWebClient(HttpMethod method,
